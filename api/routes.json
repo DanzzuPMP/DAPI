@@ -1,0 +1,16 @@
+{
+  "tools": [
+    "save2zip",
+    "screenshot",
+    "txt2img"
+  ],
+  "ai": [
+    "ocr",
+    "chat",
+    "translate"
+  ],
+  "downloader": [
+    "yt",
+    "tiktok"
+  ]
+}
