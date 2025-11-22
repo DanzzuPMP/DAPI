@@ -1,10 +1,13 @@
 {
-  "tools": [
-    "save2zip"
-  ],
   "ai": [
   ],
   "downloader": [
     "tiktok"
+  ],
+  "search": [
+    "yts"
+  ],
+  "tools": [
+    "save2zip"
   ]
 }
