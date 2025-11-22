@@ -5,50 +5,47 @@
   <title>DAPI — REST API Documentation</title>
   <style>
     body { font-family: Arial; padding: 20px; }
-    .folder { margin-top: 15px; font-weight: bold; }
-    .file { margin-left: 20px; padding: 4px; }
     code { background: #eee; padding: 3px; border-radius: 4px; }
+    .category { margin-top: 20px; font-size: 20px; font-weight: bold; }
+    .item { margin-left: 20px; margin-top: 5px; }
   </style>
 </head>
 <body>
   <h1>DAPI — REST API</h1>
 
-  <p>Semua fitur di bawah ini otomatis dibaca dari folder <code>/api</code>.</p>
+  <p>Daftar fitur di bawah dibaca otomatis dari <code>routes.json</code>.</p>
 
-  <div id="list">Loading fitur...</div>
+  <div id="list">Loading...</div>
 
   <script>
-    async function loadList() {
-      const res = await fetch('/api/list');
+    async function load() {
+      const res = await fetch("/api/list");
       const data = await res.json();
 
       if (!data.success) {
-        document.getElementById("list").innerHTML = "Gagal memuat data.";
+        document.getElementById("list").innerHTML =
+          "<p>Gagal memuat fitur.</p>";
         return;
       }
 
-      function render(items) {
-        let html = "";
+      let html = "";
 
-        items.forEach(item => {
-          if (item.type === "folder") {
-            html += `<div class="folder">📁 ${item.name}</div>`;
-            html += render(item.children);
-          } else if (item.type === "file") {
-            html += `
-              <div class="file">
-                🔗 <code>${item.endpoint}</code>
-              </div>`;
-          }
+      for (const category in data.routes) {
+        html += `<div class='category'>📁 ${category}</div>`;
+
+        data.routes[category].forEach(feature => {
+          html += `
+            <div class="item">
+              🔗 <code>/api/${category}/${feature}</code>
+            </div>
+          `;
         });
-
-        return html;
       }
 
-      document.getElementById("list").innerHTML = render(data.tree);
+      document.getElementById("list").innerHTML = html;
     }
 
-    loadList();
+    load();
   </script>
 </body>
 </html>
