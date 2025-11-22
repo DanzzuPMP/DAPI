@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   try {
-    const { q } = req.query;
+    const { query } = req.query;
 
     if (!query) {
       return res.status(400).json({
