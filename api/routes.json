@@ -8,6 +8,7 @@
     "yts"
   ],
   "tools": [
-    "save2zip"
+    "save2zip",
+    "iplook"
   ]
 }
