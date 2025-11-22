@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>REST API | Txt2Image</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      max-width: 800px;
+      margin: auto;
+      line-height: 1.6;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 5px 8px;
+      border-radius: 5px;
+      display: inline-block;
+    }
+    pre {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Txt2Image REST API</h1>
+  <p>Selamat datang di REST API sederhana untuk generate gambar menggunakan endpoint txt2image. Anda dapat mengakses API ini langsung melalui URL tanpa perlu autentikasi.</p>
+
+  <h2>🔗 Endpoint Dasar</h2>
+  <p>
+    <code>/api/tools?txt2image=prompt</code>
+  </p>
+
+  <p>Contoh:</p>
+  <pre>https://webaku.vercel.app/api/tools?txt2image=kucing imut</pre>
+
+  <h2>⚙ Parameter Tambahan</h2>
+  <ul>
+    <li><b>txt2image</b> → prompt teks untuk menghasilkan gambar</li>
+    <li><b>aspect</b> (opsional) → Square, Portrait, Landscape</li>
+  </ul>
+
+  <p>Contoh dengan parameter lengkap:</p>
+  <pre>https://webaku.vercel.app/api/tools?txt2image=galaxy&aspect=Landscape</pre>
+
+  <h2>📌 Response</h2>
+  <p>API akan mengembalikan JSON:</p>
+
+<pre>{
+  "success": true,
+  "prompt": "kucing imut",
+  "results": [
+    {
+      "url": "https://raphael.app/results/xxxx.png",
+      "seed": 12345
+    }
+  ]
+}
+</pre>
+
+  <h2>🚀 Cara Menggunakan di JavaScript</h2>
+
+<pre>const res = await fetch(
+  "https://webaku.vercel.app/api/tools?txt2image=cat"
+);
+const data = await res.json();
+console.log(data);</pre>
+
+  <p>API ini bebas digunakan. Silakan integrasikan di web, bot, atau aplikasi Anda.</p>
+
+</body>
+      </html>
