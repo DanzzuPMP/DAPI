@@ -2,17 +2,17 @@ import axios from "axios";
 
 export default async function handler(req, res) {
   try {
-    const { q } = req.q;
+    const { q } = req.query;
 
     if (!query) {
       return res.status(400).json({
         success: false,
-        message: "Parameter 'query' wajib diisi. Contoh: ?query=stereo love 9d"
+        message: "Parameter 'query' wajib diisi. Contoh: ?q=stereo love 9d"
       });
     }
 
     // Request ke API Yupra
-    const apiUrl = `https://api.yupra.my.id/api/search/youtube?q=${encodeURIComponent(q)}`;
+    const apiUrl = `https://api.yupra.my.id/api/search/youtube?q=${encodeURIComponent(query)}`;
     const fetchRes = await axios.get(apiUrl);
     const json = fetchRes.data;
 
