@@ -2,7 +2,8 @@
   "ai": [
   ],
   "downloader": [
-    "tiktok"
+    "tiktok",
+    "youtube"
   ],
   "search": [
     "yts"
