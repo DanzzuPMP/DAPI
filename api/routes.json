@@ -7,6 +7,9 @@
     "youtube",
     "spotify"
   ],
+  "maker": [
+    "fakeipchat"
+  ],
   "search": [
     "yts",
     "gsmarena"
@@ -15,6 +18,5 @@
     "save2zip",
     "iplook",
     "cuaca",
-    "fakeipchat"
   ]
 }
