@@ -12,6 +12,7 @@
   ],
   "tools": [
     "save2zip",
-    "iplook"
+    "iplook",
+    "cuaca"
   ]
 }
