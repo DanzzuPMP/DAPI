@@ -3,7 +3,8 @@
   ],
   "downloader": [
     "tiktok",
-    "youtube"
+    "youtube",
+    "spotify"
   ],
   "search": [
     "yts"
