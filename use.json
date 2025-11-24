@@ -1,0 +1,51 @@
+{
+  "success": true,
+  "documentation": {
+    "ai/ai-group": {
+      "method": "GET",
+      "description": "Endpoint untuk mendapatkan respons AI dari grup tertentu",
+      "parameters": [
+        {
+          "name": "query",
+          "type": "string",
+          "required": true,
+          "description": "Pertanyaan atau perintah untuk AI"
+        },
+        {
+          "name": "groupId",
+          "type": "string",
+          "required": true,
+          "description": "ID grup untuk konteks percakapan"
+        }
+      ],
+      "examples": [
+        {
+          "description": "Contoh penggunaan sederhana",
+          "code": "/api/ai/ai-group?query=Halo&groupId=group123"
+        }
+      ],
+      "response": "{\n  \"success\": true,\n  \"response\": \"Halo! Ada yang bisa saya bantu?\",\n  \"groupId\": \"group123\"\n}",
+      "notes": "Endpoint ini memiliki rate limit 100 request per menit per IP"
+    },
+    "downloader/tiktok": {
+      "method": "GET",
+      "description": "Mendownload video TikTok tanpa watermark",
+      "parameters": [
+        {
+          "name": "url",
+          "type": "string",
+          "required": true,
+          "description": "URL video TikTok"
+        }
+      ],
+      "examples": [
+        {
+          "description": "Download video TikTok",
+          "code": "/api/downloader/tiktok?url=https://vt.tiktok.com/xxxxx"
+        }
+      ],
+      "response": "{\n  \"success\": true,\n  \"title\": \"Judul Video\",\n  \"downloadUrl\": \"https://example.com/video.mp4\"\n}",
+      "notes": "Pastikan URL TikTok valid dan video tersedia"
+    }
+  }
+}
