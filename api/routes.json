@@ -18,6 +18,7 @@
     "save2zip",
     "iplook",
     "cuaca",
-    "status-bedrock"
+    "status-mc-bedrock",
+    "status-mc-java"
   ]
 }
