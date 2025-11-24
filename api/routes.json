@@ -17,6 +17,7 @@
   "tools": [
     "save2zip",
     "iplook",
-    "cuaca"
+    "cuaca",
+    "status-bedrock"
   ]
 }
