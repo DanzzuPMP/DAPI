@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DAPI — REST API Documentation</title>
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --code-bg: #f4f4f4;
+      --category-border: #ddd;
+      --item-border: #007acc;
+      --nav-bg: #f8f9fa;
+      --nav-text: #333;
+      --hamburger-color: #333;
+      --transition-speed: 0.3s;
+      --primary-color: #007acc;
+    }
+
+    .dark-mode {
+      --bg-color: #1a1a1a;
+      --text-color: #f0f0f0;
+      --code-bg: #2d2d2d;
+      --category-border: #444;
+      --item-border: #4dabf7;
+      --nav-bg: #2d3748;
+      --nav-text: #f7fafc;
+      --hamburger-color: #f7fafc;
+      --primary-color: #4dabf7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+    }
+
+    body { 
+      font-family: 'Segoe UI', Arial, sans-serif; 
+      padding: 20px; 
+      max-width: 800px; 
+      margin: 0 auto;
+      line-height: 1.6;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      position: relative;
+      min-height: 100vh;
+    }
+
+    /* Header Styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--category-border);
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      background: var(--bg-color);
+    }
+
+    .logo:hover {
+      transform: scale(1.05);
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .logo-text {
+      font-weight: bold;
+      font-size: 1.5em;
+      color: var(--primary-color);
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    /* Toggle Switch */
+    .toggle-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-label {
+      font-size: 0.9em;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--primary-color);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 24px;
+      height: 18px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      display: block;
+      height: 3px;
+      width: 100%;
+      background-color: var(--hamburger-color);
+      border-radius: 2px;
+      transition: all var(--transition-speed) ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(7.5px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-7.5px) rotate(-45deg);
+    }
+
+    /* Navigation Menu */
+    .nav-menu {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100vh;
+      background-color: var(--nav-bg);
+      padding: 80px 30px 30px;
+      box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: right var(--transition-speed) ease;
+      overflow-y: auto;
+    }
+
+    .nav-menu.active {
+      right: 0;
+    }
+
+    .nav-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--category-border);
+    }
+
+    .nav-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg-color);
+    }
+
+    .nav-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .nav-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: var(--nav-text);
+    }
+
+    .nav-menu ul {
+      list-style: none;
+    }
+
+    .nav-menu li {
+      margin-bottom: 15px;
+    }
+
+    .nav-menu a {
+      color: var(--nav-text);
+      text-decoration: none;
+      font-size: 1.1em;
+      padding: 12px 15px;
+      display: block;
+      border-radius: 6px;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .nav-menu a:hover {
+      background-color: rgba(0, 122, 204, 0.1);
+      transform: translateX(5px);
+    }
+
+    .nav-menu a i {
+      margin-right: 10px;
+      width: 20px;
+      text-align: center;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-speed);
+    }
+
+    .overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Content Styles */
+    code { 
+      background: var(--code-bg); 
+      padding: 4px 8px; 
+      border-radius: 4px; 
+      font-family: 'Courier New', monospace;
+      color: var(--text-color);
+    }
+    
+    .category { 
+      margin-top: 25px; 
+      font-size: 1.3em; 
+      font-weight: bold;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--category-border);
+    }
+    
+    .item { 
+      margin: 12px 0; 
+      padding: 8px 12px;
+      background: var(--code-bg);
+      border-radius: 6px;
+      border-left: 4px solid var(--item-border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .item:hover {
+      background-color: rgba(0, 122, 204, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .loading { color: #666; font-style: italic; }
+    .error { 
+      color: #d32f2f; 
+      background: #ffebee; 
+      padding: 10px; 
+      border-radius: 4px; 
+    }
+
+    .dark-mode .error {
+      background: #3c1a1a;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--category-border);
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+    }
+
+    .dark-mode footer {
+      color: #aaa;
+    }
+
+    /* Modal Styles */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1100;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-speed);
+    }
+
+    .modal.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background-color: var(--bg-color);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transform: translateY(-20px);
+      transition: transform var(--transition-speed);
+    }
+
+    .modal.active .modal-content {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--category-border);
+    }
+
+    .modal-title {
+      font-size: 1.4em;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: var(--text-color);
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background-color 0.2s;
+    }
+
+    .modal-close:hover {
+      background-color: var(--code-bg);
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    .usage-section {
+      margin-bottom: 25px;
+    }
+
+    .usage-section h3 {
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      font-size: 1.2em;
+    }
+
+    .usage-section p {
+      margin-bottom: 15px;
+    }
+
+    .usage-section ul, .usage-section ol {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+
+    .usage-section li {
+      margin-bottom: 8px;
+    }
+
+    .param-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 15px 0;
+    }
+
+    .param-table th, .param-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--category-border);
+    }
+
+    .param-table th {
+      background-color: var(--code-bg);
+      font-weight: bold;
+    }
+
+    .example-box {
+      background-color: var(--code-bg);
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+
+    .example-box code {
+      background: none;
+      padding: 0;
+    }
+
+    .endpoint-url {
+      font-weight: bold;
+      color: var(--primary-color);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .logo-container {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .nav-menu {
+        width: 250px;
+      }
+
+      .modal-content {
+        width: 95%;
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <header>
+    <div class="logo-container">
+      <div class="logo">
+        <!-- GANTI URL GAMBAR DI BAWAH INI DENGAN LOGO ANDA -->
+        <img src="./assets/logo.jpg" alt="DAPI Logo">
+      </div>
+      <div class="logo-text">DAPI</div>
+    </div>
+    <div class="controls">
+      <div class="toggle-container">
+        <span class="toggle-label">Mode Malam</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="darkModeToggle">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="nav-menu" id="navMenu">
+    <div class="nav-header">
+      <div class="nav-logo">
+        <!-- GANTI URL GAMBAR DI BAWAH INI DENGAN LOGO ANDA -->
+        <img src="https://cdn-icons-png.flaticon.com/512/2164/2164832.png" alt="DAPI Logo">
+      </div>
+      <div class="nav-title">DAPI Menu</div>
+    </div>
+    <ul>
+      <li><a href="#" id="navHome"><i class="fas fa-home"></i> Beranda</a></li>
+      <li><a href="#" id="navAbout"><i class="fas fa-info-circle"></i> Tentang DAPI</a></li>
+    </ul>
+  </nav>
+
+  <div class="overlay" id="overlay"></div>
+
+  <!-- Modal untuk dokumentasi API -->
+  <div class="modal" id="apiModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Dokumentasi API</h2>
+        <button class="modal-close" id="modalClose">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Konten dokumentasi akan dimuat di sini -->
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <p>Membaca fitur yang terdaftar di <code>routes.json</code>.</p>
+
+    <div id="list" class="loading">Memuat data...</div>
+  </main>
+
+  <footer>
+    <p>DAPI &copy; 2023 - Dokumentasi REST API</p>
+  </footer>
+
+  <script>
+    // DOM Elements
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    const overlay = document.getElementById('overlay');
+    const navHome = document.getElementById('navHome');
+    const navAbout = document.getElementById('navAbout');
+    const apiModal = document.getElementById('apiModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    // Dark Mode Functionality
+    function initDarkMode() {
+      const isDarkMode = localStorage.getItem('darkMode') === 'true';
+      
+      if (isDarkMode) {
+        document.body.classList.add('dark-mode');
+        darkModeToggle.checked = true;
+      }
+      
+      darkModeToggle.addEventListener('change', function() {
+        if (this.checked) {
+          document.body.classList.add('dark-mode');
+          localStorage.setItem('darkMode', 'true');
+        } else {
+          document.body.classList.remove('dark-mode');
+          localStorage.setItem('darkMode', 'false');
+        }
+      });
+    }
+
+    // Hamburger Menu Functionality
+    function initHamburgerMenu() {
+      function toggleMenu() {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+      }
+
+      hamburger.addEventListener('click', toggleMenu);
+      overlay.addEventListener('click', toggleMenu);
+      
+      // Close menu when clicking on nav links
+      navHome.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Navigasi ke Beranda');
+        toggleMenu();
+      });
+      
+      navAbout.addEventListener('click', function(e) {
+        e.preventDefault();
+        alert('Navigasi ke Tentang DAPI');
+        toggleMenu();
+      });
+    }
+
+    // Modal Functionality
+    function initModal() {
+      // Close modal when clicking close button
+      modalClose.addEventListener('click', function() {
+        apiModal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+
+      // Close modal when clicking outside
+      apiModal.addEventListener('click', function(e) {
+        if (e.target === apiModal) {
+          apiModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && apiModal.classList.contains('active')) {
+          apiModal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
+    // Show API documentation modal
+    function showApiDocumentation(category, feature) {
+      const apiPath = `${category}/${feature}`;
+      
+      // Set modal title
+      modalTitle.textContent = `Dokumentasi: /api/${apiPath}`;
+      
+      // Show loading state
+      modalBody.innerHTML = '<p class="loading">Memuat dokumentasi...</p>';
+      
+      // Show modal
+      apiModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      
+      // Load documentation from use.json
+      fetch('/api/use')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          if (!data.success) {
+            throw new Error(data.message || 'Failed to load documentation');
+          }
+          
+          // Find the documentation for the selected API
+          const apiDoc = data.documentation[apiPath];
+          
+          if (!apiDoc) {
+            modalBody.innerHTML = `
+              <div class="error">
+                <p>Dokumentasi untuk <code>/api/${apiPath}</code> tidak ditemukan.</p>
+                <p>Pastikan endpoint ini terdaftar di file use.json.</p>
+              </div>
+            `;
+            return;
+          }
+          
+          // Build the documentation HTML
+          let html = `
+            <div class="usage-section">
+              <span class="endpoint-url">Endpoint: <code>/api/${apiPath}</code></span>
+              <p><strong>Metode:</strong> ${apiDoc.method || 'GET'}</p>
+              <p>${apiDoc.description || 'Tidak ada deskripsi tersedia.'}</p>
+            </div>
+          `;
+          
+          // Parameters section
+          if (apiDoc.parameters && apiDoc.parameters.length > 0) {
+            html += `
+              <div class="usage-section">
+                <h3>Parameter</h3>
+                <table class="param-table">
+                  <thead>
+                    <tr>
+                      <th>Parameter</th>
+                      <th>Tipe</th>
+                      <th>Wajib</th>
+                      <th>Deskripsi</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+            `;
+            
+            apiDoc.parameters.forEach(param => {
+              html += `
+                <tr>
+                  <td><code>${param.name}</code></td>
+                  <td>${param.type || 'string'}</td>
+                  <td>${param.required ? 'Ya' : 'Tidak'}</td>
+                  <td>${param.description || '-'}</td>
+                </tr>
+              `;
+            });
+            
+            html += `
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+          
+          // Usage examples
+          if (apiDoc.examples && apiDoc.examples.length > 0) {
+            html += `
+              <div class="usage-section">
+                <h3>Contoh Penggunaan</h3>
+            `;
+            
+            apiDoc.examples.forEach((example, index) => {
+              html += `
+                <div class="example-box">
+                  <p><strong>Contoh ${index + 1}:</strong> ${example.description || ''}</p>
+                  <code>${example.code || ''}</code>
+                </div>
+              `;
+            });
+            
+            html += `</div>`;
+          }
+          
+          // Response format
+          if (apiDoc.response) {
+            html += `
+              <div class="usage-section">
+                <h3>Format Response</h3>
+                <div class="example-box">
+                  <code>${apiDoc.response}</code>
+                </div>
+              </div>
+            `;
+          }
+          
+          // Notes
+          if (apiDoc.notes) {
+            html += `
+              <div class="usage-section">
+                <h3>Catatan</h3>
+                <p>${apiDoc.notes}</p>
+              </div>
+            `;
+          }
+          
+          modalBody.innerHTML = html;
+        })
+        .catch(error => {
+          console.error('Error loading documentation:', error);
+          modalBody.innerHTML = `
+            <div class="error">
+              <p>Gagal memuat dokumentasi: ${error.message}</p>
+              <p>Pastikan file use.json tersedia dan berformat dengan benar.</p>
+            </div>
+          `;
+        });
+    }
+
+    // Load API Data langsung dari routes.json
+    async function load() {
+      try {
+        const res = await fetch("/api/list");
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
+        const data = await res.json();
+
+        if (!data.success) {
+          document.getElementById("list").innerHTML = 
+            `<div class="error">Gagal memuat fitur: ${data.message || 'Unknown error'}</div>`;
+          return;
+        }
+
+        let html = "";
+
+        for (const category in data.routes) {
+          html += `<div class='category'>📁 ${category}</div>`;
+
+          data.routes[category].forEach(feature => {
+            html += `
+              <div class="item" data-category="${category}" data-feature="${feature}">
+                🔗 <code>/api/${category}/${feature}</code>
+              </div>
+            `;
+          });
+        }
+
+        document.getElementById("list").innerHTML = html || "<p>Tidak ada routes yang tersedia.</p>";
+        
+        // Add click event listeners to API items
+        document.querySelectorAll('.item').forEach(item => {
+          item.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            const feature = this.getAttribute('data-feature');
+            showApiDocumentation(category, feature);
+          });
+        });
+        
+      } catch (error) {
+        document.getElementById("list").innerHTML = 
+          `<div class="error">Error: ${error.message}</div>`;
+      }
+    }
+
+    // Initialize everything when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      initDarkMode();
+      initHamburgerMenu();
+      initModal();
+      load();
+    });
+  </script>
+</body>
+</html>
